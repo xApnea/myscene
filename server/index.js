@@ -4,7 +4,7 @@ const path = require('path');
 
 const app = express();
 
-app.us(morgan('dev'));
+app.use(morgan('dev'));
 app.use(express.static(path.join(__dirname, '/../dist')));
 
 app.get('/api', (req, res) => {
