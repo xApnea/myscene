@@ -1,0 +1,28 @@
+{
+  "name": "myscene",
+  "version": "1.0.0",
+  "description": "<!--  > This material was originally posted [here](http://www.quora.com/What-is-Amazons-approach-to-product-development-and-product-management). It is reproduced here for posterities sake.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/xApnea/myscene.git"
+  },
+  "author": "John Bruno",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/xApnea/myscene/issues"
+  },
+  "homepage": "https://github.com/xApnea/myscene#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.4"
+  }
+}
