@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const db = require('./index.js');
 mongoose.Promise = global.Promise;
 
-const productSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: String,
   profilePicture: String,
   top5: [String],
@@ -10,6 +10,6 @@ const productSchema = new mongoose.Schema({
   video: String,
 })
 
-const User = mongoose.model('User', productSchema);
+const User = mongoose.model('User', userSchema);
 
-module.exports = Product;
+module.exports = User;
