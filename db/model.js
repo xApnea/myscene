@@ -6,9 +6,11 @@ const userSchema = new mongoose.Schema({
   name: String,
   profilePicture: String,
   top5: [String],
-  audio : [String],
+  audio : [
+    { src: String, title: String, artist: String }
+  ],
   video: String,
-})
+});
 
 const User = mongoose.model('User', userSchema);
 
