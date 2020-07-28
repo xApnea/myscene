@@ -12,6 +12,7 @@ const upload = multer({storage: multer.memoryStorage()});
 
 app.use(morgan('dev'));
 app.use('/api/user', express.json());
+app.use('/api/top5', express.json());
 app.use(express.static(path.join(__dirname, '/../dist')));
 
 app.get('/api', (req, res) => {
@@ -46,6 +47,21 @@ app.post('/api/user', (req, res) => {
       console.error(err);
       res.status(500).send(error);
     })
+})
+
+//update top5
+app.put('/api/top5', (req, res) => {
+  const username = req.query.username;
+  const data = req.body;
+  User.update({ username: username }, { top5: data })
+    .then((result) => {
+      console.log(result);
+      res.status(200).send(result);
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(500).send(error);
+    });
 })
 
 //////////////////////////////////////////////////////////////////////////////////
@@ -102,7 +118,7 @@ app.delete('/api/audio', (req, res) => {
 
 
 //////////////////////////////////////////////////////////////////////////////////
-// AUDIO
+// VIDEO
 //////////////////////////////////////////////////////////////////////////////////
 //Change youtube video
 app.put('/api/video', (req, res) => {

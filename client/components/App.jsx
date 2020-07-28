@@ -110,6 +110,11 @@ class App extends React.Component {
       axios.get(path)
         .then((response) => {
           const data = response.data[0];
+
+          if (!data.audio[0]) {
+            data.audio[0] = {src: '', title: '', artist: ''}
+          }
+          console.log(data);
           this.setState({
             user: data,
             username: data.username,
@@ -186,7 +191,7 @@ class App extends React.Component {
           </div>
           <div>
             <form onSubmit={this.handleAvatarUpload} name="avatar" encType="multipart/form-data">
-              <ChooseAvatar for="file-upload">
+              <ChooseAvatar htmlFor="file-upload">
                   Choose Avatar
               </ChooseAvatar>
               <input id="file-upload" type="file" onChange={this.handleAvatarChange}></input>
@@ -211,7 +216,7 @@ class App extends React.Component {
 
         <Three>
           <div>
-            {/* <Top5 top5={this.state.top5}/> */}
+            <Top5 top5={this.state.top5}/>
           </div>
         </Three>
 
