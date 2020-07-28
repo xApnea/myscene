@@ -4,7 +4,6 @@ import styled from 'styled-components';
 import axios from 'axios';
 
 //import Audio from './Audio.jsx';
-//import ProfilePicture from './ProfilePicture.jsx';
 //import Top5 from './Top5.jsx';
 //import Youtube from './Youtube.jsx';
 
@@ -49,21 +48,36 @@ class App extends React.Component {
     super();
     this.state = {
       name: 'John Bruno',
-      profilePicture: 'https://picsum.photos/300/400',
+      avatar: 'https://picsum.photos/300/400',
       audio: [],
       activeSong: {src: 'https://madtown.band/wp-content/uploads/2020/01/1.-Lucid-Vision.wav?_=1', title: 'Lucid Vision', artist: 'Madtown'},
       video: 'https://www.youtube.com/embed/ys01UvI4LVg',
       top5: [],
     }
-    this.handleProfilePictureChange = this.handleProfilePictureChange.bind(this);
-    this.handleProfilePictureUpload = this.handleProfilePictureUpload.bind(this);
+    this.handleAvatarChange = this.handleAvatarChange.bind(this);
+    this.handleAvatarUpload = this.handleAvatarUpload.bind(this);
   }
 
-  handleProfilePictureChange(event) {
+  getUrlParams() {
+    const url = window.location.href;
+    console.log("The URL of this page is: " + url);
+    var params = {};
+    var parser = document.createElement('a');
+    parser.href = url;
+    var query = parser.search.substring(1);
+    var vars = query.split('&');
+    for (var i = 0; i < vars.length; i++) {
+      var pair = vars[i].split('=');
+      params[pair[0]] = decodeURIComponent(pair[1]);
+    }
+    return params;
+  }
+
+  handleAvatarChange(event) {
     this.setState({ selectedImage: event.target.files[0] });
   };
 
-  handleProfilePictureUpload(event) {
+  handleAvatarUpload(event) {
     event.preventDefault();
 
     var formData = new FormData();
@@ -72,9 +86,10 @@ class App extends React.Component {
       this.state.selectedImage,
     );
 
+    const params = this.getUrlParams();
     axios({
       method: 'post',
-      url: `/api/profile`,
+      url: `/api/avatar?username=${params.username}`,
       data: formData,
       headers: {
         'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
@@ -99,12 +114,12 @@ class App extends React.Component {
         <One>
           <div>
             <h2>{this.state.name}</h2>
-            <img src={this.state.profilePicture}></img>
+            <img src={this.state.avatar}></img>
           </div>
           <div>
-            <form onSubmit={this.handleProfilePictureUpload} name="avatar" encType="multipart/form-data">
-              <input type="file" onChange={this.handleProfilePictureChange}></input>
-              <button type="submit">Upload New Profile Picture</button>
+            <form onSubmit={this.handleAvatarUpload} name="avatar" encType="multipart/form-data">
+              <input type="file" onChange={this.handleAvatarChange}></input>
+              <button type="submit">Upload Avatar</button>
             </form>
           </div>
         </One>
