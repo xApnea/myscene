@@ -3,8 +3,8 @@ const db = require('./index.js');
 mongoose.Promise = global.Promise;
 
 const userSchema = new mongoose.Schema({
-  name: String,
-  profilePicture: String,
+  username: String,
+  avatar: String,
   top5: [String],
   audio : [
     { src: String, title: String, artist: String }
