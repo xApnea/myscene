@@ -11,6 +11,7 @@ const app = express();
 const upload = multer({storage: multer.memoryStorage()});
 
 app.use(morgan('dev'));
+app.use('/api/user', express.json());
 app.use(express.static(path.join(__dirname, '/../dist')));
 
 app.get('/api', (req, res) => {
@@ -35,8 +36,16 @@ app.get('/api/user', (req, res) => {
 
 //create a new user
 app.post('/api/user', (req, res) => {
-  //User.create()
-  res.status(200).send('User was successfully created');
+  const data = req.body;
+  User.create(data)
+    .then((result) => {
+      console.log(result);
+      res.status(200).send(result);
+    })
+    .catch((err) => {
+      console.error(err);
+      res.status(500).send(error);
+    })
 })
 
 //////////////////////////////////////////////////////////////////////////////////
