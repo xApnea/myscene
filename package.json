@@ -18,8 +18,12 @@
   },
   "homepage": "https://github.com/xApnea/myscene#readme",
   "dependencies": {
+    "aws-sdk": "^2.721.0",
+    "axios": "^0.19.2",
     "express": "^4.17.1",
+    "mongoose": "^5.9.25",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
     "react": "^16.13.1",
     "react-audio-player": "^0.13.0",
     "react-dom": "^16.13.1",
