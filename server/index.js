@@ -55,12 +55,9 @@ app.post('/api/user', (req, res) => {
 //Add a new avatar
 app.post('/api/avatar', upload.single('avatar'), (req, res) => {
   AWS.config.loadFromPath('./config.json');
-  // var key = new Date();
-  // key = JSON.stringify(key);
+  const username = req.query.username;
 
-  console.log(req.headers);
   console.log(req.file);
-  console.log(req.body);
 
   var objectParams = {Bucket: 'myscene', Key: req.file.originalname, Body: req.file.buffer};
   // Create object upload promise
@@ -70,8 +67,17 @@ app.post('/api/avatar', upload.single('avatar'), (req, res) => {
       console.log(data);
       console.log(`Successfully uploaded data to ${objectParams.Bucket}/${objectParams.Key}`);
       // Here we need to send a put request to update the avatar
-      res.status(200).send(`Successfully uploaded data to ${objectParams.Bucket}/${objectParams.Key}`);
 
+      User.update({ username: username }, { avatar: `https://myscene.s3.us-east-2.amazonaws.com/${objectParams.Key}` })
+        .then((result) => {
+          console.log(result);
+          res.status(200).send(result);
+        })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send(error);
+        });
+      //res.status(200).send(`Successfully uploaded data to ${objectParams.Bucket}/${objectParams.Key}`);
     })
   .catch((error) => {
     console.log(`This is the failing field: ${error.field}`);
