@@ -1,17 +1,29 @@
 import React from 'react';
 
 import styled from 'styled-components';
+import { createGlobalStyle } from 'styled-components'
 import axios from 'axios';
 
 //import Audio from './Audio.jsx';
-//import Top5 from './Top5.jsx';
-//import Youtube from './Youtube.jsx';
+import Top5 from './Top5.jsx';
+
+
+const GlobalStyle = createGlobalStyle`
+  body {
+    background-color: #292d3e;
+    color: #bebebe;
+    font-family: 'Bitter', serif;
+  }
+  input[type="file"] {
+    display: none;
+  }
+`
 
 const Container = styled.div`
   display: grid;
   grid-template-columns: 33% 33% 33%;
   grid-template-rows: auto;
-  grid-gap: 15px;
+  grid-gap: 30px;
   justify-content: center;
 `;
 
@@ -24,18 +36,21 @@ const Title = styled.div`
 const One = styled.div`
   grid-column: 1;
   grid-row: 2;
-  padding-left: 20px;
+  padding-left: 50px;
+  justify-content: center;
 `;
 
 const Two = styled.div`
   grid-column: 2;
   grid-row: 2;
+  justify-content: center;
 `;
 
 const Three = styled.div`
   grid-column: 3;
   grid-row: 2;
-  padding-right: 20px;
+  padding-right: 50px;
+  justify-content: center;
 `;
 
 const Bottom = styled.div`
@@ -43,19 +58,71 @@ const Bottom = styled.div`
   grid-row: 3;
 `;
 
+const Submit = styled.button`
+  background-color: #5c0b0b;
+  border: none;
+  color: white;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+`
+
+const ChooseAvatar = styled.label`
+  background-color: #bebebe;
+  border: none;
+  color: #292d3e;
+  padding: 12px 24px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 12px;
+`
+
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      name: 'John Bruno',
-      avatar: 'https://picsum.photos/300/400',
+      params: '',
+      user: {},
+      username: '',
+      avatar: '',
       audio: [],
-      activeSong: {src: 'https://madtown.band/wp-content/uploads/2020/01/1.-Lucid-Vision.wav?_=1', title: 'Lucid Vision', artist: 'Madtown'},
-      video: 'https://www.youtube.com/embed/ys01UvI4LVg',
+      activeSong: {src: '', title: '', artist: ''},
       top5: [],
     }
     this.handleAvatarChange = this.handleAvatarChange.bind(this);
     this.handleAvatarUpload = this.handleAvatarUpload.bind(this);
+  }
+
+  componentDidMount() {
+    // Make a request for a user with a given ID
+    this.getUser();
+  }
+
+  getUser() {
+    const params = this.getUrlParams();
+    if (!params.username) {
+      alert('No username is present in the url.');
+    } else {
+      const path = `http://localhost:3000/api/user?username=${params.username}`
+      axios.get(path)
+        .then((response) => {
+          const data = response.data[0];
+          this.setState({
+            user: data,
+            username: data.username,
+            avatar: data.avatar,
+            audio: data.audio,
+            activeSong: data.audio[0],
+            top5: data.top5
+          })
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
   }
 
   getUrlParams() {
@@ -97,7 +164,7 @@ class App extends React.Component {
     })
     .then((response) => {
       console.log(response);
-      // re-get the data
+      this.getUser();
     })
     .catch((error) => {
       console.error(error);
@@ -107,19 +174,23 @@ class App extends React.Component {
   render() {
     return (
       <Container>
+      <GlobalStyle/>
         <Title>
           <h1>myscene.com</h1>
         </Title>
 
         <One>
           <div>
-            <h2>{this.state.name}</h2>
+            <h2>{this.state.username}</h2>
             <img src={this.state.avatar}></img>
           </div>
           <div>
             <form onSubmit={this.handleAvatarUpload} name="avatar" encType="multipart/form-data">
-              <input type="file" onChange={this.handleAvatarChange}></input>
-              <button type="submit">Upload Avatar</button>
+              <ChooseAvatar for="file-upload">
+                  Choose Avatar
+              </ChooseAvatar>
+              <input id="file-upload" type="file" onChange={this.handleAvatarChange}></input>
+              <Submit type="submit">Upload Avatar</Submit>
             </form>
           </div>
         </One>
