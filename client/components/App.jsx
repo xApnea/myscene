@@ -5,7 +5,7 @@ import axios from 'axios';
 
 //import Audio from './Audio.jsx';
 //import ProfilePicture from './ProfilePicture.jsx';
-import Top5 from './Top5.jsx';
+//import Top5 from './Top5.jsx';
 //import Youtube from './Youtube.jsx';
 
 const Container = styled.div`
@@ -53,8 +53,40 @@ class App extends React.Component {
       audio: [],
       activeSong: {src: 'https://madtown.band/wp-content/uploads/2020/01/1.-Lucid-Vision.wav?_=1', title: 'Lucid Vision', artist: 'Madtown'},
       video: 'https://www.youtube.com/embed/ys01UvI4LVg',
-      top5: []
+      top5: [],
     }
+    this.handleProfilePictureChange = this.handleProfilePictureChange.bind(this);
+    this.handleProfilePictureUpload = this.handleProfilePictureUpload.bind(this);
+  }
+
+  handleProfilePictureChange(event) {
+    this.setState({ selectedImage: event.target.files[0] });
+  };
+
+  handleProfilePictureUpload(event) {
+    event.preventDefault();
+
+    var formData = new FormData();
+    formData.append(
+      "avatar",
+      this.state.selectedImage,
+    );
+
+    axios({
+      method: 'post',
+      url: `/api/profile`,
+      data: formData,
+      headers: {
+        'Content-Type': `multipart/form-data; boundary=${formData._boundary}`,
+      }
+    })
+    .then((response) => {
+      console.log(response);
+      // re-get the data
+    })
+    .catch((error) => {
+      console.error(error);
+    });
   }
 
   render() {
@@ -69,7 +101,12 @@ class App extends React.Component {
             <h2>{this.state.name}</h2>
             <img src={this.state.profilePicture}></img>
           </div>
-          <button onClick={this.handleProfilePictureUpload}>Upload New Profile Picture</button>
+          <div>
+            <form onSubmit={this.handleProfilePictureUpload} name="avatar" encType="multipart/form-data">
+              <input type="file" onChange={this.handleProfilePictureChange}></input>
+              <button type="submit">Upload New Profile Picture</button>
+            </form>
+          </div>
         </One>
 
         <Two>
@@ -88,12 +125,12 @@ class App extends React.Component {
 
         <Three>
           <div>
-            <Top5 top5={this.state.top5}/>
+            {/* <Top5 top5={this.state.top5}/> */}
           </div>
         </Three>
 
         <Bottom>
-          <div><iframe width="560" height="315" src={this.state.video} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div>
+          {/* <div><iframe width="560" height="315" src={this.state.video} frameBorder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowFullScreen></iframe></div> */}
         </Bottom>
       </Container>
     )
