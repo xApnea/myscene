@@ -3,6 +3,8 @@ const morgan = require('morgan');
 const path = require('path');
 const AWS = require('aws-sdk');
 const multer = require('multer');
+const db = require('../db/index.js');
+const User = require('../db/model.js')
 
 const app = express();
 
@@ -21,20 +23,28 @@ app.get('/api', (req, res) => {
 
 //get user
 app.get('/api/user', (req, res) => {
-  res.status(200).send('User successfully retreived');
+  const username = req.query.username;
+  User.find({username: username})
+    .then((user) => {
+      res.status(200).send(user);
+    })
+    .catch((error) => {
+      res.status(500).send(error);
+    });
 })
 
 //create a new user
 app.post('/api/user', (req, res) => {
+  //User.create()
   res.status(200).send('User was successfully created');
 })
 
 //////////////////////////////////////////////////////////////////////////////////
-// PROFILE PICTURE
+// AVATAR
 //////////////////////////////////////////////////////////////////////////////////
 
-//Add a new profile picture
-app.post('/api/profile', upload.single('avatar'), (req, res) => {
+//Add a new avatar
+app.post('/api/avatar', upload.single('avatar'), (req, res) => {
   AWS.config.loadFromPath('./config.json');
   // var key = new Date();
   // key = JSON.stringify(key);
@@ -49,8 +59,10 @@ app.post('/api/profile', upload.single('avatar'), (req, res) => {
   uploadPromise
   .then((data) => {
       console.log(data);
-      console.log(`Successfully uploaded data to ${objectParams.Bucket}/${objectParams.Key}`);;
+      console.log(`Successfully uploaded data to ${objectParams.Bucket}/${objectParams.Key}`);
+      // Here we need to send a put request to update the avatar
       res.status(200).send(`Successfully uploaded data to ${objectParams.Bucket}/${objectParams.Key}`);
+
     })
   .catch((error) => {
     console.log(`This is the failing field: ${error.field}`);
