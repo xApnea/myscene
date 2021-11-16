@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/xApnea/myscene#readme",
   "dependencies": {
-    "aws-sdk": "^2.721.0",
+    "aws-sdk": "^2.814.0",
     "axios": "^0.19.2",
     "express": "^4.17.1",
     "mongoose": "^5.9.25",
